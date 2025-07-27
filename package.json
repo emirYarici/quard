@@ -10,8 +10,26 @@
     "test": "jest"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^5.1.6",
+    "@react-native-community/image-editor": "^4.3.0",
+    "@react-native-ml-kit/text-recognition": "^1.5.2",
+    "@react-navigation/bottom-tabs": "^7.4.4",
+    "@react-navigation/elements": "^2.6.0",
+    "@react-navigation/native": "^7.1.15",
+    "@react-navigation/native-stack": "^7.3.22",
+    "lucide-react-native": "^0.526.0",
     "react": "18.3.1",
-    "react-native": "0.77.0"
+    "react-native": "0.77.0",
+    "react-native-blob-util": "^0.22.2",
+    "react-native-element-dropdown": "^2.12.4",
+    "react-native-gesture-handler": "2.25.0",
+    "react-native-mmkv": "^2.12.2",
+    "react-native-reanimated": "3.16.7",
+    "react-native-safe-area-context": "^5.5.2",
+    "react-native-screens": "^4.13.1",
+    "react-native-svg": "^15.12.0",
+    "react-native-vision-camera": "^4.7.1",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
