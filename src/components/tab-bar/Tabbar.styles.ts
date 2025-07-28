@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {COLORS} from '../../../constants/colors';
 
 const stylez = StyleSheet.create({
   tabbarItem: {flex: 1, justifyContent: 'center', alignItems: 'center'},
@@ -9,7 +10,7 @@ const stylez = StyleSheet.create({
     bottom: 25,
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'gray',
+    backgroundColor: COLORS.surface,
     marginHorizontal: 20,
     borderRadius: 20,
     borderCurve: 'continuous',

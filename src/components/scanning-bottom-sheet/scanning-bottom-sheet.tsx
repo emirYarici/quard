@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Switch} from 'react-native';
 import BottomSheet, {
   BottomSheetFooter,
   BottomSheetView,
@@ -7,9 +7,14 @@ import BottomSheet, {
 import {Pressable} from 'react-native-gesture-handler';
 import {PhotolenghtIndicator} from '../photo-lenght-indicator/photo-lenght-indicator';
 import {LongPressButton} from '../long-press-button/long-press-button';
+import {SubjectSelector} from '../subject-selector/subject-selector';
+import SubSubjectSelectionContainer from '../../containers/subSubject-selection.container';
+import {SubSubjectSelector} from '../sub-subject-selector/sub-subject-selector';
+import {ImageOrTextSwitch} from '../image-or-text-switch/image-or-text-switch';
+import {COLORS} from '../../../constants/colors';
 export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['8%', '30%'], []);
+  const snapPoints = useMemo(() => ['8%', '25%'], []);
   // variables
   const sections = useMemo(
     () =>
@@ -48,27 +53,44 @@ export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
       ref={bottomSheetRef}
       snapPoints={snapPoints}
       enableDynamicSizing={false}
-      index={0}
+      index={1}
       onChange={handleSheetChange}
-      footerComponent={renderFooter}>
+      footerComponent={renderFooter}
+      backgroundStyle={{backgroundColor: COLORS.surface}}
+      handleIndicatorStyle={{backgroundColor: COLORS.primary}}>
       <BottomSheetView style={styles.contentContainer}>
         <View
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{
+            justifyContent: 'space-between',
             width: '100%',
             flexDirection: 'col',
-
             paddingVertical: 20,
+            paddingHorizontal: 20,
             height: '100%',
           }}>
           <View
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-evenly',
+              justifyContent: 'space-between',
+            }}>
+            <SubjectSelector />
+            <ImageOrTextSwitch />
+            <SubSubjectSelector />
+          </View>
+
+          <View
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}>
             <PhotolenghtIndicator photoLenght={photoList.length} />
             <LongPressButton onPress={onContinue} />
 
             <View
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 paddingVertical: 30,
                 paddingHorizontal: 20,
@@ -77,7 +99,8 @@ export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 opacity: 0,
-              }}></View>
+              }}
+            />
           </View>
         </View>
       </BottomSheetView>
@@ -89,14 +112,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: 'grey',
+    backgroundColor: COLORS.surface,
   },
   contentContainer: {
     flex: 1,
     height: '100%',
     width: '100%',
-    backgroundColor: 'gray',
     alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    paddingBottom: 20,
   },
   footerContainer: {
     borderRadius: 12,

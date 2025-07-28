@@ -10,7 +10,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import stylez from './TabBarItem.styles';
-
+import {House, User} from 'lucide-react-native';
+const icons = {
+  home: props => <House {...props} />,
+  profile: props => <User {...props} />,
+};
 export const TabBarItem = memo(
   ({route, descriptors, index, isFocused, navigation}) => {
     const isSelected = useSharedValue(isFocused ? 1 : 0);
@@ -35,7 +39,7 @@ export const TabBarItem = memo(
         backgroundColor: interpolateColor(
           isSelected.value,
           [0, 1],
-          ['gray', 'orange'],
+          ['transparent', 'orange'],
         ),
         width: interpolate(isSelected.value, [0, 1], [50, 100]),
       }),
@@ -74,11 +78,16 @@ export const TabBarItem = memo(
     return (
       <Animated.View
         key={`${index}_bottom_tab`}
-        onLongPress={onLongPress}
         style={[animatedTabBarItemStyles]}>
         <TouchableOpacity onPress={onPress} style={stylez.tabbarItem}>
-          <Animated.View style={iconAnimatedStyle}></Animated.View>
-
+          <Animated.View style={iconAnimatedStyle}>
+            {icons[route.name]
+              ? icons[route.name]({
+                  color: isFocused ? 'white' : '#5c5c5c',
+                  size: 24,
+                })
+              : null}
+          </Animated.View>
           <Animated.Text
             style={[
               animatedTextStyles,

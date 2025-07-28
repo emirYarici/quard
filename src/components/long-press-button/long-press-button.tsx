@@ -9,6 +9,7 @@ import Animated, {
 
 import React from 'react';
 import {View} from 'react-native';
+import {COLORS} from '../../../constants/colors';
 export function LongPressButton() {
   const process = useSharedValue(0);
   const maxwidth = useSharedValue(0);
@@ -54,7 +55,7 @@ export function LongPressButton() {
           paddingVertical: 5,
           borderRadius: 10,
           overflow: 'hidden',
-          backgroundColor: 'orange',
+          backgroundColor: COLORS.primaryPressed,
         }}>
         <Animated.View
           style={[
@@ -68,7 +69,9 @@ export function LongPressButton() {
             },
           ]}
         />
-        <Text>Devam etmek için için basili tut</Text>
+        <Text style={{color: COLORS.textPrimary, fontWeight: 'bold'}}>
+          Devam etmek için için basili tut
+        </Text>
       </View>
     </GestureDetector>
   );

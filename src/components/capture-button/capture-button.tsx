@@ -32,8 +32,7 @@ export function CaptureButton({onTakePhotoPressed}) {
       style={{
         alignSelf: 'center',
         position: 'absolute',
-
-        bottom: 200,
+        bottom: 250,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',

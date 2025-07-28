@@ -8,6 +8,7 @@ import {HomeContainer} from '../containers/home.container';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TabBar} from '../components/tab-bar';
+import ProfileContainer from '../containers/profile.container';
 
 const BottomTabs = createBottomTabNavigator({});
 
@@ -24,8 +25,8 @@ export default function BottomTabsNavigation() {
         }}
       />
       <BottomTabs.Screen
-        name={'home2'}
-        component={HomeContainer}
+        name={'profile'}
+        component={ProfileContainer}
         options={{
           headerShown: false,
           cardStyle: {backgroundColor: 'transparent'},

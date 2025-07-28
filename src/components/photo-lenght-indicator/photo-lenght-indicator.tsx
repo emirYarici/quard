@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import React, {useEffect} from 'react';
+import {COLORS} from '../../../constants/colors';
 export function PhotolenghtIndicator({photoLenght}: {photoLenght: number}) {
   const bouncePhotoLenghtIndicator = useSharedValue(0);
   const animatedPhotoLenghtStyle = useAnimatedStyle(() => ({
@@ -38,14 +39,14 @@ export function PhotolenghtIndicator({photoLenght}: {photoLenght: number}) {
         {
           paddingVertical: 30,
           paddingHorizontal: 20,
-          backgroundColor: 'orange',
+          backgroundColor: COLORS.tertiary,
           borderRadius: 10,
           justifyContent: 'center',
           alignItems: 'center',
         },
         animatedPhotoLenghtStyle,
       ]}>
-      <Text>{photoLenght}</Text>
+      <Text style={{color: COLORS.textPrimary}}>{photoLenght}</Text>
     </Animated.View>
   );
 }
