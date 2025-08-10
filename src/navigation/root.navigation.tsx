@@ -8,13 +8,17 @@ import {ScanResultContainer} from '../containers/scan-result.container';
 import BottomTabsNavigation from './bottom.navigation';
 import SubjectSelectionContainer from '../containers/subject-selection.container';
 import SubSubjectSelectionContainer from '../containers/subSubject-selection.container';
+import {DayDetailsContainer} from '../containers/day-detail.container';
+import {QuestionDetailContainer} from '../containers/question-detail.container';
+import {SolutionScanningContainer} from '../containers/solution-scanning-container';
+import {QuestionFilterContainer} from '../containers/question-filter.container';
 
-const ScannerStack = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator();
 
 export default function RootNavigation() {
   return (
-    <ScannerStack.Navigator>
-      <ScannerStack.Screen
+    <RootStack.Navigator>
+      <RootStack.Screen
         name={'bottom-navigation'}
         component={BottomTabsNavigation}
         options={{
@@ -25,7 +29,7 @@ export default function RootNavigation() {
           animation: 'slide_from_right',
         }}
       />
-      <ScannerStack.Screen
+      <RootStack.Screen
         name={'scanning-container'}
         component={ScanningContainer}
         options={{
@@ -35,7 +39,7 @@ export default function RootNavigation() {
           animation: 'slide_from_right',
         }}
       />
-      <ScannerStack.Screen
+      <RootStack.Screen
         name={'scan-result-container'}
         component={ScanResultContainer}
         options={{
@@ -44,24 +48,60 @@ export default function RootNavigation() {
           animation: 'slide_from_right',
         }}
       />
-      <ScannerStack.Screen
+      <RootStack.Screen
         name={'subject-selection'}
         component={SubjectSelectionContainer}
         options={{
-          cardOverlayEnabled: true,
-          cardStyle: {backgroundColor: 'transparent'},
-          animation: 'slide_from_right',
+          presentation: 'modal',
+          headerShown: false,
         }}
       />
-      <ScannerStack.Screen
+      <RootStack.Screen
         name={'subSubject-selection'}
         component={SubSubjectSelectionContainer}
+        options={{
+          presentation: 'modal',
+          headerShown: false,
+        }}
+      />
+      <RootStack.Screen
+        name={'day-detail-container'}
+        component={DayDetailsContainer}
         options={{
           cardOverlayEnabled: true,
           cardStyle: {backgroundColor: 'transparent'},
           animation: 'slide_from_right',
+          headerShown: false,
         }}
       />
-    </ScannerStack.Navigator>
+      <RootStack.Screen
+        name={'question-detail-container'}
+        component={QuestionDetailContainer}
+        options={{
+          cardOverlayEnabled: true,
+          headerShown: false,
+          cardStyle: {backgroundColor: 'transparent'},
+          animation: 'slide_from_right',
+        }}
+      />
+      <RootStack.Screen
+        name={'solution-scanning-container'}
+        component={SolutionScanningContainer}
+        options={{
+          cardOverlayEnabled: true,
+          headerShown: false,
+          cardStyle: {backgroundColor: 'transparent'},
+          animation: 'slide_from_right',
+        }}
+      />
+      <RootStack.Screen
+        name={'question-filter-container'}
+        component={QuestionFilterContainer}
+        options={{
+          presentation: 'modal',
+          headerShown: false,
+        }}
+      />
+    </RootStack.Navigator>
   );
 }

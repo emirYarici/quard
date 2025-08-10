@@ -2,7 +2,7 @@
 
 import {useNavigation} from '@react-navigation/native';
 import type React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,11 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
+import {COLORS} from '../../../constants/colors';
+import {sizes} from '../../../constants/sizes';
+import storage from '../../../infra/storage';
+import {getIconColor} from '../../../utils/question.utils';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 interface HabitData {
   [key: string]: number; // date string -> completion count (0-4 levels)
@@ -59,6 +64,7 @@ export const HabitTracker: React.FC = () => {
   const navigation = useNavigation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [habitData, setHabitData] = useState<HabitData>(sampleHabitData);
+  const [questionByDate, setquestionByDate] = useState({});
   const [selectedDay, setSelectedDay] = useState<{
     day: number;
     level: number;
@@ -67,11 +73,56 @@ export const HabitTracker: React.FC = () => {
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        const questionsData = await storage.getQuestions();
+        console.log('questionsdata', questionsData);
+        const questionByDate = questionsData.reduce(
+          (currentObj, currentValue) => {
+            const dateStr = currentValue.dateAdded;
+            const date = new Date(dateStr);
+
+            const year = date.getUTCFullYear(); // or date.getFullYear() if you want local time
+            const month = date.getUTCMonth(); // 0-indexed: January is 0
+            const day = date.getUTCDate(); // 1-31
+
+            const formatted = `${year}-${String(month + 1).padStart(
+              2,
+              '0',
+            )}-${String(day).padStart(2, '0')}`;
+
+            if (
+              !currentObj[formatted] ||
+              !currentObj[formatted][currentValue.subjectId]
+            ) {
+              currentObj[formatted] = {
+                [currentValue.subjectId]: [currentValue],
+              };
+            } else if (currentObj[formatted][currentValue.subjectId]) {
+              currentObj[formatted][currentValue.subjectId].push(currentValue);
+            }
+            return currentObj;
+          },
+          {},
+        );
+
+        console.log('emir deneme', questionByDate);
+        setquestionByDate(questionByDate);
+      } catch (error) {
+        console.error('Questions yüklenemedi:', error);
+      }
+    };
+    loadQuestions();
+  }, []);
 
   // Get first day of month and number of days
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
+  const lastDayOfPrevMonth = new Date(year, month, 0);
+  console.log('lastDayOfPrevMonth', lastDayOfPrevMonth.getDate());
   const daysInMonth = lastDay.getDate();
+
   const startingDayOfWeek = firstDay.getDay();
 
   // Navigate months
@@ -111,13 +162,15 @@ export const HabitTracker: React.FC = () => {
     const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(
       day,
     ).padStart(2, '0')}`;
-    const currentLevel = getIntensityLevel(dateString);
-    const newLevel = currentLevel >= 4 ? 0 : currentLevel + 1;
 
-    setHabitData(prev => ({
-      ...prev,
-      [dateString]: newLevel,
-    }));
+    navigation.push('day-detail-container', {date: dateString});
+    // const currentLevel = getIntensityLevel(dateString);
+    // const newLevel = currentLevel >= 4 ? 0 : currentLevel + 1;
+
+    // setHabitData(prev => ({
+    //   ...prev,
+    //   [dateString]: newLevel,
+    // }));
   };
 
   // Handle day long press for details
@@ -142,14 +195,18 @@ export const HabitTracker: React.FC = () => {
   // Create calendar grid
   const renderCalendarDays = () => {
     const days = [];
-
+    console.log('starting day of the week', startingDayOfWeek);
     // Add empty cells for days before month starts
-    for (let i = 0; i < startingDayOfWeek; i++) {
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       days.push(
-        <View
-          key={`empty-${i}`}
-          style={[styles.dayCell, {backgroundColor: 'transparent'}]}
-        />,
+        <View key={`empty-${i}`}>
+          <View style={[styles.dayCell, {backgroundColor: COLORS.background}]}>
+            <Text style={[styles.dayText, {color: COLORS.muted}]}>
+              {lastDayOfPrevMonth.getDate() - i}
+            </Text>
+          </View>
+          <View style={{height: 50, width: 10}} />
+        </View>,
       );
     }
 
@@ -159,32 +216,53 @@ export const HabitTracker: React.FC = () => {
         2,
         '0',
       )}-${String(day).padStart(2, '0')}`;
+
+      console.log('alov', dateString);
       const level = getIntensityLevel(dateString);
       const isToday =
         new Date().toDateString() === new Date(year, month, day).toDateString();
 
       days.push(
-        <TouchableOpacity
-          key={day}
-          style={[
-            styles.dayCell,
-            {
-              backgroundColor: getIntensityColor(level),
-              borderColor: isToday ? '#FF944D' : 'transparent', // primary color for today
-              borderWidth: isToday ? 2 : 0,
-            },
-          ]}
-          onPress={() => handleDayPress(day)}
-          onLongPress={() => handleDayLongPress(day)}
-          activeOpacity={0.7}>
-          <Text
+        <View>
+          <TouchableOpacity
+            key={day}
             style={[
-              styles.dayText,
-              {color: level >= 2 ? '#0D0D0D' : '#FFFFFF'},
-            ]}>
-            {day}
-          </Text>
-        </TouchableOpacity>,
+              styles.dayCell,
+              {
+                borderColor: isToday ? '#FF944D' : 'transparent', // primary color for today
+                borderWidth: isToday ? 2 : 0,
+              },
+            ]}
+            onPress={() => handleDayPress(day)}
+            onLongPress={() => handleDayLongPress(day)}
+            activeOpacity={0.7}>
+            <Text
+              style={[
+                styles.dayText,
+                {color: level >= 2 ? '#0D0D0D' : COLORS.muted},
+              ]}>
+              {day}
+            </Text>
+          </TouchableOpacity>
+          <View style={{height: 30, width: 10}}>
+            {questionByDate[dateString] &&
+              Object.keys(questionByDate[dateString]).map(subjectKey => {
+                return (
+                  <View
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    style={{
+                      width: 10,
+                      height: 10,
+                      backgroundColor: getIconColor(parseInt(subjectKey))
+                        .iconColor,
+                      margin: 2,
+                      borderRadius: 100,
+                    }}
+                  />
+                );
+              })}
+          </View>
+        </View>,
       );
     }
 
@@ -192,7 +270,7 @@ export const HabitTracker: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         {/* Month Navigation */}
@@ -202,29 +280,15 @@ export const HabitTracker: React.FC = () => {
             onPress={goToPreviousMonth}>
             <Text style={styles.navButtonText}>‹</Text>
           </TouchableOpacity>
+          <View>
+            <Text style={styles.monthText}>{year}</Text>
 
-          <Text style={styles.monthText}>
-            {MONTHS[month]} {year}
-          </Text>
+            <Text style={styles.monthText}>{MONTHS[month].toUpperCase()}</Text>
+          </View>
 
           <TouchableOpacity style={styles.navButton} onPress={goToNextMonth}>
             <Text style={styles.navButtonText}>›</Text>
           </TouchableOpacity>
-        </View>
-
-        {/* Stats */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statBadge}>
-            <Text style={styles.statText}>
-              {completedDays}/{totalDays} days
-            </Text>
-          </View>
-          <View style={styles.statBadge}>
-            <Text style={styles.statText}>{completionRate}% complete</Text>
-          </View>
-          <View style={styles.statBadge}>
-            <Text style={styles.statText}>7 day streak</Text>
-          </View>
         </View>
       </View>
 
@@ -241,75 +305,19 @@ export const HabitTracker: React.FC = () => {
 
         {/* Calendar grid */}
         <View style={styles.calendarGrid}>{renderCalendarDays()}</View>
-
-        {/* Legend */}
-        <View style={styles.legend}>
-          <View style={styles.legendContent}>
-            <Text style={styles.legendText}>Less</Text>
-            <View style={styles.legendColors}>
-              {[0, 1, 2, 3, 4].map(level => (
-                <View
-                  key={level}
-                  style={[
-                    styles.legendColor,
-                    {backgroundColor: getIntensityColor(level)},
-                  ]}
-                />
-              ))}
-            </View>
-            <Text style={styles.legendText}>More</Text>
-          </View>
-
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => navigation.push('scanning-container')}>
-            <Text style={styles.addButtonText}>+ Soru ekle</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Instructions */}
       </View>
-
-      {/* Day Details Modal */}
-      <Modal
-        visible={selectedDay !== null}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setSelectedDay(null)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {selectedDay && `${MONTHS[month]} ${selectedDay.day}, ${year}`}
-            </Text>
-            <Text style={styles.modalText}>
-              {selectedDay?.level === 0
-                ? 'No habits completed'
-                : `${selectedDay?.level} habit${
-                    (selectedDay?.level || 0) > 1 ? 's' : ''
-                  } completed`}
-            </Text>
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => setSelectedDay(null)}>
-              <Text style={styles.modalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#0D0D0D', // background
+    backgroundColor: COLORS.surface, // background
+    borderRadius: sizes.radius,
   },
   header: {
     padding: 20,
     backgroundColor: 'transparent', // surface
-    borderBottomWidth: 1,
-    borderBottomColor: '#2A2A2A', // border
   },
   title: {
     fontSize: 24,
@@ -321,14 +329,14 @@ const styles = StyleSheet.create({
   monthNavigation: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
   navButton: {
     width: 40,
     height: 40,
-    borderRadius: 8,
-    backgroundColor: '#2E2E2E', // inputBackground
+    borderRadius: 100,
+    backgroundColor: COLORS.primary, // inputBackground
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 8,
@@ -351,12 +359,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   statBadge: {
-    backgroundColor: '#2E2E2E', // inputBackground
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#2A2A2A', // border
   },
   statText: {
     fontSize: 12,
@@ -364,12 +370,8 @@ const styles = StyleSheet.create({
     color: '#B3B3B3', // textSecondary
   },
   calendar: {
-    padding: 20,
-    backgroundColor: '#1A1A1A', // surface
     margin: 16,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#2A2A2A', // border
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
@@ -378,7 +380,6 @@ const styles = StyleSheet.create({
   },
   dayLabels: {
     flexDirection: 'row',
-    marginBottom: 8,
   },
   dayLabelCell: {
     width: CELL_SIZE,
@@ -394,17 +395,18 @@ const styles = StyleSheet.create({
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 24,
+    justifyContent: 'space-evenly',
   },
   dayCell: {
     width: CELL_SIZE,
     height: CELL_SIZE,
     margin: 1,
-    borderRadius: 4,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'transparent',
+    backgroundColor: COLORS.secondarySurface,
+    // borderColor: COLORS.primary,
   },
   dayText: {
     fontSize: 12,

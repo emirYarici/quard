@@ -10,7 +10,6 @@ import Animated, {
 import React from 'react';
 export function CaptureButton({onTakePhotoPressed}) {
   const scale = useSharedValue(1);
-
   // Start the pulsating animation when the component mounts
   useEffect(() => {
     scale.value = withRepeat(
@@ -30,14 +29,9 @@ export function CaptureButton({onTakePhotoPressed}) {
     <TouchableOpacity
       // eslint-disable-next-line react-native/no-inline-styles
       style={{
-        alignSelf: 'center',
-        position: 'absolute',
-        bottom: 250,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 70,
-        width: 70,
       }}
       onPress={onTakePhotoPressed}>
       <View

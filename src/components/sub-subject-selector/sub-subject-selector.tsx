@@ -10,10 +10,8 @@ export function SubSubjectSelector() {
   console.log('selectedSubSubjectId', selectedSubSubjectId);
   const text =
     selectedSubSubjectId !== -1
-      ? subSubjects.filter(
-          item => item.subSubjectId === selectedSubSubjectId,
-        )[0]?.label
-      : 'Select subSubject';
+      ? subSubjects.filter(item => item.id === selectedSubSubjectId)[0]?.label
+      : 'Alt konu';
   return (
     <TouchableOpacity
       onPress={() => navigation.push('subSubject-selection')}
@@ -22,8 +20,8 @@ export function SubSubjectSelector() {
         borderRadius: 10,
         backgroundColor: COLORS.inputBackground,
         justifyContent: 'center',
-        width: '40%',
         paddingLeft: 10,
+        flex: 1,
       }}>
       <Text style={{color: COLORS.textPrimary, fontWeight: 'bold'}}>
         {text}

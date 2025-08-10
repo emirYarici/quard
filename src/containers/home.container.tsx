@@ -4,6 +4,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {HabitTracker} from '../components/tracker/tracker';
 import {COLORS} from '../../constants/colors';
+import {sizes} from '../../constants/sizes';
 export function HomeContainer() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -11,13 +12,10 @@ export function HomeContainer() {
     <View
       style={{
         flex: 1,
-        paddingTop: insets.top,
+        justifyContent: 'center',
+        padding: sizes.padding,
         backgroundColor: COLORS.background,
       }}>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('scanning-container')
-        }></TouchableOpacity>
       <HabitTracker />
     </View>
   );
