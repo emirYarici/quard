@@ -42,7 +42,7 @@ export default function SubjectSelectionContainer() {
                 justifyContent: 'center',
               }}
               key={subject.id}>
-              <Icon size={32} color={iconColor} />
+              {Icon ? <Icon size={32} color={iconColor} /> : null}
               <Text>{subject.label}</Text>
             </TouchableOpacity>
           );

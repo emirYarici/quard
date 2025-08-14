@@ -22,9 +22,16 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {AnimatedView} from 'react-native-reanimated/lib/typescript/component/View';
-export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
+import {CaptureButton} from '../capture-button/capture-button';
+export const ScanningBottomSheet = ({
+  photoList,
+  onTakePhotoPressedHandler,
+}: {
+  photoList: any[];
+  onTakePhotoPressedHandler: any;
+}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['15%', '35%'], []);
+  const snapPoints = useMemo(() => ['25%', '40%'], []);
   const bottomSheetIndex = useSharedValue(1);
   // variables
 
@@ -66,6 +73,7 @@ export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
             {
               position: 'absolute',
               // justifyContent: 'space-between',
+              paddingTop: 70,
               width: '100%',
               gap: SizeUtils.responsiveHeight(20),
               flexDirection: 'column',
@@ -120,7 +128,13 @@ export const ScanningBottomSheet = ({photoList}: {photoList: any[]}) => {
             />
           </View> */}
         </Animated.View>
-
+        <View
+          style={{
+            width: SizeUtils.responsiveWidth(30),
+            height: SizeUtils.responsiveWidth(30),
+          }}>
+          <CaptureButton onTakePhotoPressed={onTakePhotoPressedHandler} />
+        </View>
         <Animated.View
           style={[
             {

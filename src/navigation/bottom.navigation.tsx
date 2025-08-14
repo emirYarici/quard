@@ -12,6 +12,10 @@ import ProfileContainer from '../containers/profile.container';
 import QuestionsContainer from '../containers/questions.container';
 import {StatisticsContainer} from '../containers/statistics.container';
 import ScanningContainer from '../containers/scanning.container';
+import {LoginContainer} from '../containers/login.container';
+import {SignupContainer} from '../containers/sign-up-container';
+import {OnboardingStagger} from '../components/onboarding-stagger/onboarding-stagger';
+import {OnboardingContainer} from '../containers/onboarding.container';
 
 const BottomTabs = createBottomTabNavigator({});
 
@@ -56,7 +60,7 @@ export default function BottomTabsNavigation() {
       />
       <BottomTabs.Screen
         name={'profile'}
-        component={ProfileContainer}
+        component={OnboardingContainer}
         options={{
           headerShown: false,
           cardStyle: {backgroundColor: 'transparent'},

@@ -16,7 +16,6 @@ export function CommonHeader({title}: {title: string}) {
     <View
       style={{
         padding: sizes.padding,
-        paddingTop: insets.top + SizeUtils.responsiveHeight(10),
         flexDirection: 'row',
         backgroundColor: COLORS.background,
         alignItems: 'center',

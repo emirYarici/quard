@@ -56,6 +56,8 @@ export default function ScanningContainer({
   const onTakePhotoPressedHandler = async () => {
     try {
       // 1. Take the full photo
+
+      console.log('hiiiiiiii emir');
       const photo = await camera?.current?.takePhoto();
 
       const {croppedImageUri, textResult} = await onTakePhotoPressed(
@@ -107,10 +109,11 @@ export default function ScanningContainer({
           bottom: 250,
           width: 70,
           height: 70,
-        }}>
-        <CaptureButton onTakePhotoPressed={onTakePhotoPressedHandler} />
-      </View>
-      <ScanningBottomSheet photoList={photoList} />
+        }}></View>
+      <ScanningBottomSheet
+        photoList={photoList}
+        onTakePhotoPressedHandler={onTakePhotoPressedHandler}
+      />
     </View>
   );
 }

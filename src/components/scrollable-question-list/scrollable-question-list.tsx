@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list';
-import {Grid2x2, Dice1} from 'lucide-react-native';
+import {Grid2x2, Dice1, Filter, ListFilter} from 'lucide-react-native';
 import {memo, useState} from 'react';
 import {Pressable, Text, View} from 'react-native';
 import {COLORS} from '../../../constants/colors';
@@ -10,6 +10,7 @@ import {SmallSizedQuestionCard} from '../question-card/small-sized-question-card
 import React from 'react';
 import {Question} from '../../../types/question.types';
 import {useNavigation} from '@react-navigation/native';
+import {size} from 'zod';
 export const ScrollableQuestionList = memo(
   ({questions}: {questions: Question[]}) => {
     const [showingStyle, setShowingStyle] = useState('small');
@@ -35,9 +36,12 @@ export const ScrollableQuestionList = memo(
             paddingHorizontal: sizes.padding,
           }}>
           <Pressable
-            style={{backgroundColor: COLORS.primary}}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
             onPress={openFilterPage}>
-            <Text>Filter</Text>
+            <ListFilter color={COLORS.textPrimary} />
           </Pressable>
           <Pressable onPress={() => setShowingStyle('small')}>
             <Grid2x2 color={COLORS.textPrimary} />
@@ -66,9 +70,8 @@ export const ScrollableQuestionList = memo(
             ) : (
               <View
                 style={{
-                  paddingBottom: sizes.padding,
                   flex: 1,
-                  paddingRight: index % 2 !== 0 ? sizes.padding : 0,
+                  padding: sizes.padding,
                 }}>
                 <MidSizedQuestionCard question={item} />
               </View>

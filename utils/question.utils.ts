@@ -5,17 +5,17 @@ import {Question} from '../types/question.types';
 export function getIconColor(subjectId: number) {
   switch (subjectId) {
     case 0:
-      return {iconColor: COLORS.mathIcon};
+      return {iconColor: COLORS.secondarySurface};
     case 1:
       return {iconColor: COLORS.biologyIcon};
     case 2:
-      return {iconColor: COLORS.chemIcon};
+      return {iconColor: COLORS.chemistryIcon};
     case 3:
       return {iconColor: COLORS.philosophyIcon};
     case 4:
       return {iconColor: COLORS.physicsIcon};
     case 5:
-      return {iconColor: COLORS.geoIcon};
+      return {iconColor: COLORS.geographyIcon};
     case 6:
       return {iconColor: COLORS.turkishIcon};
     default:

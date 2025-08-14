@@ -5,11 +5,16 @@ import {useQuestionFilterStore} from '../../stores/filter.store';
 import React from 'react';
 import {FilterButtons} from './filter-buttons';
 import {COLORS} from '../../../constants/colors';
+import {Collapsible} from '../collapsible/collapsible';
 export function FilterSubjectComponent() {
   const {selectedSubjectIds, selectSubjectId} = useQuestionFilterStore();
   return (
-    <View style={{gap: sizes.padding}}>
-      <Text style={{fontWeight: 'bold', color: COLORS.textPrimary}}>KONU</Text>
+    <Collapsible
+      header={
+        <Text style={{fontWeight: 'bold', color: COLORS.textPrimary}}>
+          KONU
+        </Text>
+      }>
       <View
         style={{
           flexDirection: 'row',
@@ -30,6 +35,6 @@ export function FilterSubjectComponent() {
           );
         })}
       </View>
-    </View>
+    </Collapsible>
   );
 }

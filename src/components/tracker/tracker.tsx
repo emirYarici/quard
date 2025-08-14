@@ -16,14 +16,14 @@ import {COLORS} from '../../../constants/colors';
 import {sizes} from '../../../constants/sizes';
 import storage from '../../../infra/storage';
 import {getIconColor} from '../../../utils/question.utils';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {size} from 'zod';
 
 interface HabitData {
   [key: string]: number; // date string -> completion count (0-4 levels)
 }
 
 const {width} = Dimensions.get('window');
-const CELL_SIZE = (width - 60) / 7; // Responsive cell size
+const CELL_SIZE = (width - 86) / 7; // Responsive cell size
 
 const MONTHS = [
   'January',
@@ -40,30 +40,12 @@ const MONTHS = [
   'December',
 ];
 
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-// Sample data - replace with your actual data
-const sampleHabitData: HabitData = {
-  '2024-01-01': 4,
-  '2024-01-02': 3,
-  '2024-01-03': 2,
-  '2024-01-05': 4,
-  '2024-01-08': 1,
-  '2024-01-10': 4,
-  '2024-01-12': 3,
-  '2024-01-15': 2,
-  '2024-01-18': 4,
-  '2024-01-20': 1,
-  '2024-01-22': 4,
-  '2024-01-25': 3,
-  '2024-01-28': 2,
-  '2024-01-30': 4,
-};
+const DAYS = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
 export const HabitTracker: React.FC = () => {
   const navigation = useNavigation();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [habitData, setHabitData] = useState<HabitData>(sampleHabitData);
+  const [habitData, setHabitData] = useState<HabitData>({});
   const [questionByDate, setquestionByDate] = useState({});
   const [selectedDay, setSelectedDay] = useState<{
     day: number;
@@ -137,24 +119,6 @@ export const HabitTracker: React.FC = () => {
   // Get intensity level for a date
   const getIntensityLevel = (date: string): number => {
     return habitData[date] || 0;
-  };
-
-  // Get color based on intensity
-  const getIntensityColor = (level: number): string => {
-    switch (level) {
-      case 0:
-        return '#2A2A2A'; // border color for empty days
-      case 1:
-        return '#FFD1A3'; // tertiary - lightest habit completion
-      case 2:
-        return '#FDBA74'; // success - medium habit completion
-      case 3:
-        return '#FF944D'; // primary - high habit completion
-      case 4:
-        return '#E67C30'; // primaryPressed - maximum habit completion
-      default:
-        return '#2A2A2A';
-    }
   };
 
   // Handle day press
@@ -370,20 +334,23 @@ const styles = StyleSheet.create({
     color: '#B3B3B3', // textSecondary
   },
   calendar: {
-    margin: 16,
-    borderRadius: 12,
+    borderRadius: sizes.radius,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   dayLabels: {
     flexDirection: 'row',
+    padding: 0,
   },
   dayLabelCell: {
-    width: CELL_SIZE,
     height: 32,
+    width: CELL_SIZE,
+    margin: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -394,8 +361,8 @@ const styles = StyleSheet.create({
   },
   calendarGrid: {
     flexDirection: 'row',
+    padding: sizes.padding,
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
   },
   dayCell: {
     width: CELL_SIZE,

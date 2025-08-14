@@ -38,6 +38,12 @@ export const COLORS = {
   languageBg: '#E9D5FF',
   languageIcon: '#7E22CE',
 
+  religiouscultureBg: '#E9D5FF',
+  religiouscultureIcon: '#7E22CE',
+
+  geometryBg: '#E9D5FF',
+  geometryIcon: '#7E22CE',
+
   literatureBg: '#FDE2E4',
   literatureIcon: '#991B1B',
 

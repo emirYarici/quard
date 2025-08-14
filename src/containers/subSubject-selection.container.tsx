@@ -1,4 +1,4 @@
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {subSubjects} from '../../constants/lessons';
 import React from 'react';
 import {useScannerStore} from '../stores/scanner.store';
@@ -15,15 +15,21 @@ export default function SubSubjectSelectionContainer() {
       <View style={{flex: 1, gap: 2, padding: 15}}>
         {subSubjects
           .filter(item => item.subjectId === selectedSubjectId)
-          ?.map(subject => (
+          ?.map(subsubject => (
             <TouchableOpacity
               onPress={() => {
-                selectSubSubjectId(subject.subSubjectId);
+                selectSubSubjectId(subsubject.id);
                 navigation.goBack();
               }}
-              style={{padding: 15, borderRadius: 10, backgroundColor: 'gray'}}
-              key={subject.subjectId}>
-              <Text>{subject.label}</Text>
+              style={{
+                padding: 15,
+                borderRadius: 10,
+                backgroundColor: COLORS.surface,
+              }}
+              key={subsubject.subjectId}>
+              <Text style={{color: COLORS.textPrimary}}>
+                {subsubject.label}
+              </Text>
             </TouchableOpacity>
           ))}
       </View>

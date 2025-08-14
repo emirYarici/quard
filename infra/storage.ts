@@ -122,57 +122,58 @@ class QuestionStorage {
         }
       }
 
-      const formData = new FormData();
-      formData.append('image', {
-        permanentPath,
-        type: 'image/jpeg',
-        name: fileName,
-      });
-
-      const res = await fetch('http://128.8.0.80:5000/ocr', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      const json = await res.json();
-      console.log('json.text', json.text);
-
-      // const question: Question = {
-      //   id: `q_${timestamp}`,
-      //   imagePath: permanentPath,
-      //   fileName,
-      //   ocrText: ocrText || '',
-      //   subjectId,
-      //   subSubjectId,
-      //   dateAdded: new Date().toISOString(),
-      //   reviewCount: 0,
-      //   isMastered: false,
-      //   notes: '',
-      //   difficulty: 1,
-      //   tags: [],
-      //   solutionImagepath: undefined,
-      // };
-
-      // console.log('📝 Question object created:', {
-      //   id: question.id,
-      //   imagePath: question.imagePath,
-      //   ocrTextLength: question.ocrText.length,
+      // const formData = new FormData();
+      // formData.append('image', {
+      //   permanentPath,
+      //   type: 'image/jpeg',
+      //   name: fileName,
       // });
 
-      // const questions = await this.getQuestions();
-      // questions.unshift(question);
-      // await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
+      // const res = await fetch('http://128.8.0.80:5000/ocr', {
+      //   method: 'POST',
+      //   body: formData,
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
 
-      // console.log('💾 Question saved to AsyncStorage');
-      // console.log('📊 Total questions:', questions.length);
+      // const json = await res.json();
+      // console.log('json.text', json.text);
 
-      // // Save sonrası directory'yi tekrar kontrol et
-      // await this.debugDirectoryContents();
+      const question: Question = {
+        id: `q_${timestamp}`,
+        imagePath: permanentPath,
+        fileName,
+        ocrText: ocrText || '',
+        subjectId,
+        subSubjectId,
+        dateAdded: new Date().toISOString(),
+        reviewCount: 0,
+        isMastered: false,
+        notes: '',
+        examId: isTyt ? 0 : 1,
+        difficulty: 1,
+        tags: [],
+        solutionImagepath: undefined,
+      };
 
-      // return question;
+      console.log('📝 Question object created:', {
+        id: question.id,
+        imagePath: question.imagePath,
+        ocrTextLength: question.ocrText.length,
+      });
+
+      const questions = await this.getQuestions();
+      questions.unshift(question);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
+
+      console.log('💾 Question saved to AsyncStorage');
+      console.log('📊 Total questions:', questions.length);
+
+      // Save sonrası directory'yi tekrar kontrol et
+      await this.debugDirectoryContents();
+
+      return question;
     } catch (error) {
       console.error('❌ Save question error:', error);
       throw error;

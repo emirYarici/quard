@@ -12,6 +12,7 @@ import {DayDetailsContainer} from '../containers/day-detail.container';
 import {QuestionDetailContainer} from '../containers/question-detail.container';
 import {SolutionScanningContainer} from '../containers/solution-scanning-container';
 import {QuestionFilterContainer} from '../containers/question-filter.container';
+import {LoginContainer} from '../containers/login.container';
 
 const RootStack = createNativeStackNavigator();
 
@@ -99,6 +100,13 @@ export default function RootNavigation() {
         component={QuestionFilterContainer}
         options={{
           presentation: 'modal',
+          headerShown: false,
+        }}
+      />
+      <RootStack.Screen
+        name={'login-container'}
+        component={LoginContainer}
+        options={{
           headerShown: false,
         }}
       />

@@ -438,7 +438,10 @@ export function getSubjectVisuals(subject: string): {
   else if (lower?.includes('turkish')) {
     icon = Book;
   } // soft magenta
-
+  else {
+    icon = Book;
+  }
+  console.log('lower', lower);
   return {
     Icon: icon,
     bgColor: lower ? COLORS[`${lower}Bg`] : COLORS.inputBackground,
