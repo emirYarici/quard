@@ -31,11 +31,24 @@ export function LoginContainer() {
       style={{
         backgroundColor: COLORS.background,
         flex: 1,
-        flexDirection: 'column-reverse',
+        justifyContent: 'center',
       }}>
       <View
         style={{
-          backgroundColor: COLORS.surface,
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            backgroundColor: COLORS.primary,
+            height: SizeUtils.responsiveWidth(16),
+            width: SizeUtils.responsiveWidth(16),
+            borderRadius: sizes.radius,
+          }}
+        />
+        <Text style={{color: COLORS.textPrimary}}>QUARD</Text>
+      </View>
+      <View
+        style={{
           padding: sizes.padding,
           borderTopLeftRadius: sizes.radius,
           borderTopRightRadius: sizes.radius,
@@ -47,7 +60,7 @@ export function LoginContainer() {
           control={control}
           name="email"
           render={({field: {onChange, value}, fieldState: {error}}) => (
-            <View>
+            <View style={{gap: SizeUtils.responsiveHeight(4)}}>
               <Text style={{color: COLORS.textPrimary}}>Email</Text>
               <TextInput
                 placeholder="a@b.com"
@@ -55,10 +68,9 @@ export function LoginContainer() {
                 onChangeText={onChange}
                 placeholderTextColor={COLORS.muted}
                 style={{
-                  borderWidth: 1,
                   borderRadius: sizes.radius,
                   borderColor: COLORS.muted,
-
+                  backgroundColor: COLORS.inputBackground,
                   padding: sizes.padding / 1.5,
                   color: COLORS.textPrimary,
                 }}
@@ -75,7 +87,7 @@ export function LoginContainer() {
           control={control}
           name="password"
           render={({field: {onChange, value}, fieldState: {error}}) => (
-            <View>
+            <View style={{gap: SizeUtils.responsiveHeight(4)}}>
               <Text style={{color: COLORS.textPrimary}}>Şifre</Text>
 
               <TextInput
@@ -84,7 +96,8 @@ export function LoginContainer() {
                 placeholderTextColor={COLORS.muted}
                 onChangeText={onChange}
                 style={{
-                  borderWidth: 1,
+                  backgroundColor: COLORS.inputBackground,
+
                   borderRadius: sizes.radius,
                   borderColor: COLORS.muted,
                   padding: sizes.padding / 1.5,

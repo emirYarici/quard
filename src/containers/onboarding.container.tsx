@@ -32,7 +32,8 @@ export function OnboardingContainer() {
         </Text>
 
         <View style={{flex: 0.2, padding: sizes.padding, gap: 10}}>
-          <TouchableOpacity
+          <Pressable
+            onPress={() => navigation.push('signup-container')}
             style={{
               marginTop: 10,
               width: '100%',
@@ -43,7 +44,7 @@ export function OnboardingContainer() {
               alignItems: 'center',
             }}>
             <Text style={{color: 'white', fontWeight: '500'}}>Haydi Başla</Text>
-          </TouchableOpacity>
+          </Pressable>
           <Pressable
             style={{
               flexDirection: 'row',

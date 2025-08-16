@@ -9,7 +9,15 @@ import {FilterSubjectComponent} from '../components/filter-container/filter-subj
 import {sizes} from '../../constants/sizes';
 import {FilterSubsubjectComponent} from '../components/filter-container/filter-subsubject-component/filter-subsubject-component';
 import {HasSolutionComponent} from '../components/filter-container/has-solution-component';
+import {useQuestionFilterStore} from '../stores/filter.store';
 export function QuestionFilterContainer() {
+  const {
+    selectedSubSubjectIds,
+    selectedSubjectIds,
+    selectedExamTypeIds,
+    hasSolution,
+  } = useQuestionFilterStore();
+
   return (
     <View style={{flex: 1, backgroundColor: COLORS.background}}>
       <QuestionFilterHeader />

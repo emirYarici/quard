@@ -187,7 +187,7 @@ export const HabitTracker: React.FC = () => {
         new Date().toDateString() === new Date(year, month, day).toDateString();
 
       days.push(
-        <View>
+        <View key={`date-button-${dateString}`}>
           <TouchableOpacity
             key={day}
             style={[

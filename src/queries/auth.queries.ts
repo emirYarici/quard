@@ -4,29 +4,20 @@ import * as Keychain from 'react-native-keychain';
 import {supabase} from '../../infra/supabase';
 import {Alert} from 'react-native';
 
-const PUBLISHABLE_KEY =
-  'pk_test_bGVhZGluZy1oZXJyaW5nLTY4LmNsZXJrLmFjY291bnRzLmRldiQ';
-const CLERK_FRONTEND_API =
-  'https://leading-herring-68.clerk.accounts.dev/v1/client';
-
 // Email + Password ile Sign Up
-export async function signUp(email: string, password: string) {
+export async function signUp(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+) {
   try {
-    const res = await axios.post(
-      `${CLERK_FRONTEND_API}/sign_ups`,
-      {
-        email_address: [email],
-        password,
-        first_name: 'Emir',
-        last_name: 'Yarıcı',
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Clerk-Publishable-Key': PUBLISHABLE_KEY,
-        },
-      },
-    );
+    const res = await axios.post('https://trai-backend.onrender.com/signup', {
+      email: email,
+      password,
+      firstName,
+      lastName,
+    });
     console.log('Sign-up response:', res.data);
     return res.data;
   } catch (err) {
@@ -34,23 +25,63 @@ export async function signUp(email: string, password: string) {
   }
 }
 
-// Email + Password ile Sign In
-export async function signIn(email: string, password: string) {
-  const res = await axios.post(
-    `${CLERK_FRONTEND_API}/v1/client/sign_ins`,
-    {
-      identifier: email,
-      password,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${CLERK_PUBLISHABLE_KEY}`,
-        'Content-Type': 'application/json',
+export async function signIn(email, password) {
+  try {
+    const CLERK_API_BASE = 'https://leading-herring-68.clerk.accounts.dev';
+    // Step 1: Create sign-in attempt
+    const signInResponse = await axios.post(
+      `${CLERK_API_BASE}/client/sign_ins`,
+      {
+        identifier: email,
       },
-    },
-  );
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
-  return res.data;
+    const signInId = signInResponse.data.id;
+
+    // Step 2: Attempt password verification
+    const verifyResponse = await axios.post(
+      `${CLERK_API_BASE}/client/sign_ins/${signInId}/attempt_first_factor`,
+      {
+        strategy: 'password',
+        password: password,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (verifyResponse.data.status === 'complete') {
+      const sessionToken = verifyResponse.data.created_session_id;
+      const userData = verifyResponse.data.user;
+
+      // Store auth data
+      await AsyncStorage.setItem('clerk_session_token', sessionToken);
+      await AsyncStorage.setItem('user_data', JSON.stringify(userData));
+
+      this.token = sessionToken;
+      this.user = userData;
+
+      return {
+        success: true,
+        token: sessionToken,
+        user: userData,
+      };
+    } else {
+      throw new Error('Sign-in incomplete');
+    }
+  } catch (error) {
+    console.error('Sign-in error:', error);
+    throw new Error(
+      error.response?.data?.errors?.[0]?.message || 'Sign-in failed',
+    );
+  }
 }
 
 export async function saveSessionToken(token: string) {

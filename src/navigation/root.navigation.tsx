@@ -13,6 +13,7 @@ import {QuestionDetailContainer} from '../containers/question-detail.container';
 import {SolutionScanningContainer} from '../containers/solution-scanning-container';
 import {QuestionFilterContainer} from '../containers/question-filter.container';
 import {LoginContainer} from '../containers/login.container';
+import {SignupContainer} from '../containers/sign-up-container';
 
 const RootStack = createNativeStackNavigator();
 
@@ -106,6 +107,13 @@ export default function RootNavigation() {
       <RootStack.Screen
         name={'login-container'}
         component={LoginContainer}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <RootStack.Screen
+        name={'signup-container'}
+        component={SignupContainer}
         options={{
           headerShown: false,
         }}
